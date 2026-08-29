@@ -1,0 +1,213 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version: 11                                     |
+|   \\  /    A nd           |                                                 |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+
+    location    "system";
+    object      controlDict;
+}
+
+// ************************************************************************* //
+
+application     foamMultiRun;
+
+regionSolvers
+{
+    sand        solid;
+    PCM         fluid;
+    CF          fluid;
+    pipe        solid;
+}
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+endTime         172800;
+
+deltaT          20;
+
+writeControl    adjustableRunTime;
+
+writeInterval   10000;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  off;
+
+maxCo           1.0;
+
+maxAlphaCo      1.0;
+
+maxDeltaT       5;
+
+
+functions
+{
+    residuals_PCM
+    {
+        type            residuals;
+        libs            ("libutilityFunctionObjects.so");
+        region          PCM;
+        fields          (p_rgh U T);
+        writeControl    timeStep;
+        writeInterval   1;
+    }
+
+    residuals_CF
+    {
+        type            residuals;
+        libs            ("libutilityFunctionObjects.so");
+        region          CF;
+        fields          (p_rgh U h T);
+        writeControl    timeStep;
+        writeInterval   1;
+    }
+
+    residuals_pipe
+    {
+        type            residuals;
+        libs            ("libutilityFunctionObjects.so");
+        region          pipe;
+        fields          (h T);
+        writeControl    timeStep;
+        writeInterval   1;
+    }
+
+    residuals_sand
+    {
+        type            residuals;
+        libs            ("libutilityFunctionObjects.so");
+        region          sand;
+        fields          (h T);
+        writeControl    timeStep;
+        writeInterval   1;
+    }
+
+    probes_PCM
+    {
+        type            probes;
+        libs            ("libsampling.so");
+        region          PCM;
+        writeControl    runTime;
+        writeInterval   1;
+        fields          (T alphaPCM);
+        probeLocations
+        (
+            (0.010 0 0.5)   // G1
+            (0.038 0 0.5)   // G2
+            (0.066 0 0.5)   // G3
+            (0.094 0 0.5)   // G4
+        );
+    }
+
+    TPCM_nearWall
+    {
+        type            probes;
+        libs            ("libsampling.so");
+        region          PCM;
+        writeControl    timeStep;
+        writeInterval   1;
+        fields          (T);
+        probeLocations
+        (
+            (0.010 0 0.5)   // baseline TPCM approximation, no metal foam
+        );
+    }
+
+    inletTemperature
+    {
+        type            probes;
+        libs            ("libsampling.so");
+        region          CF;
+        writeControl    timeStep;
+        writeInterval   1;
+        fields          (T);
+        probeLocations
+        (
+            (0 0 0.001)
+        );
+    }
+
+    outletTemperature
+    {
+        type            probes;
+        libs            ("libsampling.so");
+        region          CF;
+        writeControl    timeStep;
+        writeInterval   1;
+        fields          (T);
+        probeLocations
+        (
+            (0 0 0.999)
+        );
+    }
+
+    Tw_pipe_to_PCM
+    {
+        type            surfaceFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        region          pipe;
+        regionType      patch;
+        name            pipe_to_PCM;
+        operation       areaAverage;
+        fields          (T);
+        writeControl    timeStep;
+        writeInterval   1;
+        writeFields     false;
+    }
+
+    wallHeatFlux_pipe_to_PCM
+    {
+        type            wallHeatFlux;
+         objects         ();
+
+        libs            ("libfieldFunctionObjects.so");
+        region          pipe;
+        patches
+        (
+            pipe_to_PCM
+        );
+        writeControl    timeStep;
+        writeInterval   1;
+    }
+
+
+
+    average_PCM
+    {
+        type            volFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        region          PCM;
+        writeControl    runTime;
+        writeInterval   60;
+        log             true;
+        writeFields     false;
+        select      all;
+        operation       volAverage;
+        fields          (T pcmPhaseChange:alpha1);
+    }
+}
+// ************************************************************************* //
+

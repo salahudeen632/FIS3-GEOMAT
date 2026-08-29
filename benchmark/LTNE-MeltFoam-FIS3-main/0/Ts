@@ -1,0 +1,20 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      Ts;
+}
+
+dimensions      [0 0 0 1 0 0 0];
+internalField   uniform 298;
+
+boundaryField
+{
+    bottomWall { type fixedGradient; gradient uniform 0; }
+    leftWall   { type fixedGradient; gradient uniform 0; }
+    rightWall  { type fixedGradient; gradient uniform 0; }
+    topWall    { type fixedGradient; gradient uniform 0; }
+    frontWall  { type fixedGradient; gradient uniform 0; }
+    backWall   { type fixedGradient; gradient uniform 0; }
+}

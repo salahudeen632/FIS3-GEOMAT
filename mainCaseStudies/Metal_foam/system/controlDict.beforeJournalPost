@@ -1,0 +1,225 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version: 11                                     |
+|   \\  /    A nd           |                                                 |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+
+    location    "system";
+    object      controlDict;
+}
+
+// ************************************************************************* //
+
+application     foamMultiRun;
+
+regionSolvers
+{
+    sand        solid;
+    PCM         LTNEPCMMetalFoamTsCoupled;
+    enhanced_grout_PCM fluid;
+    CF          fluid;
+    pipe        solid;
+}
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+endTime         172800;
+
+deltaT          10;
+
+writeControl    adjustableRunTime;
+
+writeInterval   1000;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  off;
+
+maxCo           1.0;
+
+maxAlphaCo      1.0;
+
+maxDeltaT       5;
+
+
+functions
+{
+ 
+    residuals_PCM
+    {
+        type            residuals;
+        libs            ("libutilityFunctionObjects.so");
+
+        region          PCM;
+
+        fields
+        (
+            p_rgh
+            U
+            Tp
+            Ts
+        );
+
+        writeControl    timeStep;
+        writeInterval   1;
+    }
+
+    residuals_CF
+    {
+        type            residuals;
+        libs           ("libutilityFunctionObjects.so");
+
+        region          CF;
+
+        fields
+        (
+            p_rgh
+            U
+            h
+        );
+
+        writeControl    timeStep;
+        writeInterval   1;
+    }
+
+    residuals_pipe
+    {
+        type            residuals;
+        libs            ("libutilityFunctionObjects.so");
+
+        region          pipe;
+
+        fields
+        (
+            h
+        );
+
+        writeControl    timeStep;
+        writeInterval   1;
+    }
+
+    residuals_sand
+    {
+        type            residuals;
+        libs            ("libutilityFunctionObjects.so");
+
+        region          sand;
+
+        fields
+        (
+            h
+        );
+
+        writeControl    timeStep;
+        writeInterval   1;
+    }
+
+    probes_PCM
+    {
+        type            probes;
+        libs            ("libsampling.so");
+        region          PCM;
+        writeControl    runTime;
+        writeInterval   1;
+
+        fields
+        (
+            Tp
+            Ts
+            alphaPCM
+        );
+
+        probeLocations
+        (
+        (0.010 0 0.5)   // G1
+        (0.038 0 0.5)   // G2
+        );
+    }
+
+    probes_enhanced_grout_PCM
+    {
+        type            probes;
+        libs            ("libsampling.so");
+        region          enhanced_grout_PCM;
+        writeControl    runTime;
+        writeInterval   1;
+
+        fields
+        (
+            T
+        );
+
+        probeLocations
+        (
+        (0.066 0 0.5)   // G3
+        (0.094 0 0.5)   // G4
+        );
+    }
+probes_pipe
+    {
+        type            probes;
+
+        libs            ("libsampling.so");
+
+        region          pipe;
+
+        writeControl    runTime;
+
+        writeInterval   1;
+
+        fields
+        (
+            T
+        );
+
+        probeLocations
+        (
+            (0.010 0 .5)   // G1
+
+        );
+    }
+    inletTemperature
+{
+    type            probes;
+    libs            ("libsampling.so");
+
+    region          CF;
+
+    writeControl    timeStep;
+    writeInterval   1;
+
+    fields
+    (
+        T
+    );
+
+    probeLocations
+    (
+        (0 0 0.001)
+    );
+}
+
+}
+
+// ************************************************************************* //

@@ -1,0 +1,70 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+
+solvers
+{
+    p
+    {
+        solver GAMG;
+        tolerance 1e-9;
+        relTol 0.05;
+        smoother GaussSeidel;
+    }
+    pFinal { $p; relTol 0; }
+    p_rgh
+    {
+        solver GAMG;
+        tolerance 1e-9;
+        relTol 0.05;
+        smoother GaussSeidel;
+    }
+    p_rghFinal { $p_rgh; relTol 0; }
+    U
+    {
+        solver PBiCGStab;
+        preconditioner DILU;
+        tolerance 1e-10;
+        relTol 0;
+    }
+    Tp
+    {
+        solver PBiCGStab;
+        preconditioner DILU;
+        tolerance 1e-10;
+        relTol 0;
+    }
+    Ts
+    {
+        solver PCG;
+        preconditioner DIC;
+        tolerance 1e-10;
+        relTol 0;
+    }
+}
+
+PISO
+{
+    nCorrectors 1;
+    nNonOrthogonalCorrectors 0;
+    momentumPredictor yes;
+    nThermalCorrectors 8;
+    pRefCell 0;
+    pRefValue 0;
+    p_rghRefCell 0;
+    p_rghRefValue 0;
+}
+
+relaxationFactors
+{
+    equations
+    {
+        Tp .8;
+        Ts .8;
+        U 1;
+    }
+}

@@ -1,0 +1,41 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+
+application     LTNEPCMMetalFoamZhaoFoam;
+startFrom      startTime;
+startTime       0;
+stopAt          endTime;
+endTime         5400;
+deltaT          1;
+adjustTimeStep  no;
+writeControl    runTime;
+writeInterval   60;
+purgeWrite      0;
+writeFormat     ascii;
+writePrecision  10;
+writeCompression off;
+timeFormat      general;
+timePrecision   8;
+runTimeModifiable true;
+
+functions
+{
+    // One central probe for quick time-history plots.
+    probesMidplane
+    {
+        type            probes;
+        libs            ("libsampling.so");
+        writeControl    writeTime;
+        fields          (Tp Ts alphaPCM hps RePCM PrPCM kPe kSe kEff);
+        probeLocations
+        (
+            (0.10 0.008 0.06)
+        );
+    }
+
+    }

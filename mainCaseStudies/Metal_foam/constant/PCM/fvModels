@@ -1,0 +1,46 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  11
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant/PCM";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+pcmPhaseChange
+{
+    type            solidificationMeltingSource;
+    active          no;
+    selectionMode   cellZone;
+    cellZone        PCM;
+
+
+    solidificationMeltingSourceCoeffs
+    {
+        select      all;
+
+        thermoMode  thermo;
+
+        Tsol        293;
+        Tliq        303;
+
+        L           23000;
+         rhoRef      1530;
+
+    beta        0;
+
+    relax       0.7;
+
+    Cu          10000;
+
+    q           1e-3;
+    }
+}
+// ************************************************************************* //

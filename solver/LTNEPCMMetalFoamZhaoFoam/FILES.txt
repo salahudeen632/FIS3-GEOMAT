@@ -1,0 +1,14 @@
+LTNEPCMMetalFoamDoc3Foam.C
+createFields.H
+correctPCMProperties.H
+BoomsmaKeff.H
+TpEqn.H
+TsEqn.H
+UEqn.H
+pEqn.H
+updateThermalBoundaryGradients.H
+Make/files
+Make/options
+README.md
+SOURCE_REVIEW.md
+Allwmake

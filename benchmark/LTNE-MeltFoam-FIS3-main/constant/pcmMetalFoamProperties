@@ -1,0 +1,50 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      pcmMetalFoamProperties;
+}
+
+// RT58 + Cu foam numerical benchmark.
+// Values follow the supplied main document: RT58 Table 1, copper foam with
+// epsilon=0.95 and 10 PPI, bottom heating of 1600 W/m2, and external natural
+// convection represented by hLoss=3 W/(m2 K).
+
+solveFlow      no;
+epsilon        0.95;
+PPI            10;
+
+rhoPs          [1 -3 0 0 0 0 0] 850;
+rhoPl          [1 -3 0 0 0 0 0] 775;
+CpPs           [0 2 -2 -1 0 0 0] 2100;
+CpPl           [0 2 -2 -1 0 0 0] 2100;
+kPs            [1 1 -3 -1 0 0 0] 0.20;
+kPl            [1 1 -3 -1 0 0 0] 0.20;
+muPl           [1 -1 -1 0 0 0 0] 0.0269;
+Lf             [0 2 -2 0 0 0 0] 181000;
+Tm             [0 0 0 1 0 0 0] 331.15;
+
+// The main document specifies a 3 K phase-change interval.
+deltaT         [0 0 0 1 0 0 0] 14;
+
+beta           [0 0 0 -1 0 0 0] 1.1e-4;
+Tref           [0 0 0 1 0 0 0] 296.15;
+Tinf           [0 0 0 1 0 0 0] 298;
+qBottom        [1 0 -3 0 0 0 0] 1600;
+hLoss          [1 0 -3 -1 0 0 0] 3;
+
+rhoFoam        [1 -3 0 0 0 0 0] 8960;
+CpFoam         [0 2 -2 -1 0 0 0] 385;
+kFoam          [1 1 -3 -1 0 0 0] 401;
+
+// hpsModel options: Zukauskas | constant
+hpsModel       Zukauskas;
+hpsConstant    10;
+hpsMin         .25;
+
+// Paper mushy-zone damping constants: A = 1e5, B = 1e-3.
+viscosityA     0;
+mushyCu        [0 0 -1 0 0 0 0] 0;
+q              1e-3;
+useViscosityDamping false;
