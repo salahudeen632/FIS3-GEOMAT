@@ -9,6 +9,10 @@ This repository contains numerical developments and case studies performed as pa
 **CUP:** B53C25003860001  
 **Principal Investigator:** Salahudeen Mohamed Kunju
 
+## Metal Foam–PCM Modeling for BHEs
+
+This work includes numerical modeling of metal foam–enhanced phase change materials (PCMs) for borehole heat exchangers (BHEs).
+
 ## Repository Structure
 
 - `benchmark/` – Benchmark and validation studies
