@@ -31,12 +31,10 @@ boundaryField
 }
   inlet_CF
 {
-// type                flowRateInletVelocity;
+ type                flowRateInletVelocity;
 
-// volumetricFlowRate  constant 0.0005;
+ volumetricFlowRate  constant 0.000125;
 
-  type    fixedValue;
-    value   uniform (0 0 2.5);
 
 }
       CF_to_pipe

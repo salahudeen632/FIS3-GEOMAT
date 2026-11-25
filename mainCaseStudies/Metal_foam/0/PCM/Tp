@@ -26,11 +26,13 @@ boundaryField
     }
     PCM_to_pipe
     {
-        type            zeroGradient;
+      type            coupledTemperature;
+               value           uniform 293;
     }
     PCM_to_enhanced_grout_PCM
     {
-        type            zeroGradient;
+       type            coupledTemperature;
+               value           uniform 293;
     }
 }
 
